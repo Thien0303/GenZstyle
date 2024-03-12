@@ -58,13 +58,13 @@ const Sidebar = () => {
           selected={selected}
           setSelected={setSelected}
         />
-        {/* <Item
+        <Item
           title="Danh sách ban user"
           to="/getBanUser"
           icon={<ListAltOutlinedIcon />}
           selected={selected}
           setSelected={setSelected}
-        /> */}
+        />
         <Item
           title="Danh sách người dùng"
           to="/getUser"

@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const URL = "https://appstylegenz.azurewebsites.net";
+const URL = "https://genzstyle.azurewebsites.net";
 
 const instance = axios.create({
     baseURL: URL,

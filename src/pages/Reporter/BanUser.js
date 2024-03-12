@@ -75,11 +75,11 @@ const BanUser = () => {
       flex: 1,
     },
     {
-      field: "createdDate",
+      field: "createdAt",
       headerName: "Ngày report",
       flex: 1,
       valueGetter: (params) => {
-        const createdDate = new Date(params.row.createdDate);
+        const createdDate = new Date(params.row.date);
         return createdDate.toLocaleDateString("en-US");
       },
     },
@@ -164,7 +164,7 @@ const BanUser = () => {
         username: username,
         reportName: item.reportName,
         status: item.status,
-        date: item.date,
+        date: item.createdAt,
         description: item.description,
       };
     }) || [];

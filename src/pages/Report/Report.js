@@ -20,6 +20,7 @@ const Report = () => {
   const dispatch = useDispatch();
   const postData = useSelector((state) => state.getUser?.getPost);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  console.log("Id: ", selectedOrderId);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleMenuClick = (event, orderId) => {
@@ -27,7 +28,6 @@ const Report = () => {
     setSelectedOrderId(orderId);
     setIsMenuOpen(true);
   };
-  console.log("Id: ", selectedOrderId);
   const handleMenuClose = () => {
     setIsMenuOpen(false);
   };
@@ -56,8 +56,8 @@ const Report = () => {
         return "Bài viết đã được gỡ";
       case "Watting":
         return "Đang chờ xử lý";
-      case "Rejected":
-        return "Từ chối";
+      case "Reject":
+        return "Bài viết không vi phạm";
       default:
         return status;
     }
@@ -75,11 +75,16 @@ const Report = () => {
       flex: 1,
     },
     {
-      field: "createdDate",
+      field: `description`,
+      headerName: "Mô tả ",
+      flex: 1,
+    },
+    {
+      field: "createdAt",
       headerName: "Ngày report",
       flex: 1,
       valueGetter: (params) => {
-        const createdDate = new Date(params.row.createdDate);
+        const createdDate = new Date(params.row.date);
         return createdDate.toLocaleDateString("en-US");
       },
     },
@@ -157,14 +162,14 @@ const Report = () => {
         email = account.email || "";
         username = account.username || "";
       }
-
+      // console.log("id report: ", id);
       return {
         id: item.id,
         email: email,
         username: username,
         reportName: item.reportName,
         status: item.status,
-        date: item.date,
+        date: item.createdAt,
         description: item.description,
       };
     }) || [];

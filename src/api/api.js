@@ -2,7 +2,7 @@ import axios from "axios";
 import refresh from "./refresh";
 import { toast } from "react-toastify";
 
-const url = "https://appstylegenz.azurewebsites.net";
+const url = "https://genzstyle.azurewebsites.net";
 const instance = axios.create({
     baseURL: url,
     headers: {
