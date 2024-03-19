@@ -45,7 +45,7 @@ export default function Login({ setIsLogin }) {
         localStorage.setItem("user", JSON.stringify(data.data));
         console.log(data);
         switch (data.data.role) {
-          case "Admin":
+          case "ADMIN":
             navigate("/dashboard");
             break;
           default:

@@ -10,6 +10,8 @@ import Dashboard from "../pages/Dashboard/dashboard";
 import GetUser from "../pages/User/ListUser";
 import Report from "../pages/Report/Report";
 import BanUser from "../pages/Reporter/BanUser";
+import ListPackage from "../pages/Package/ListPackage";
+import AddPackage from "../pages/Package/AddPackage";
 export const publicRouters = [
   {
     path: "/",
@@ -47,6 +49,18 @@ export const adminRouters = [
     path: "/getBanUser",
     name: "getBanUser",
     component: BanUser,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/getPackage",
+    name: "getPackage",
+    component: ListPackage,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/addPackage",
+    name: "/addPackage",
+    component: AddPackage,
     layout: DefaultLayout,
   },
 ];

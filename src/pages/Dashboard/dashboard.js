@@ -1,7 +1,8 @@
-import YardOutlinedIcon from "@mui/icons-material/YardOutlined";
+import SmsOutlinedIcon from "@mui/icons-material/SmsOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import ForestOutlinedIcon from "@mui/icons-material/ForestOutlined";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import Header from "../../../src/components/Header";
@@ -9,6 +10,11 @@ import StatBox from "../../../src/components/StatBox";
 import { tokens } from "../../../src/theme";
 import { useDispatch, useSelector } from "react-redux";
 import ApexCharts from "apexcharts";
+import {
+  getAllTotalInvoice,
+  getAllTotalPost,
+  getAllTotalUser,
+} from "../../redux/apiThunk/system";
 function formatCurrency(value) {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -17,71 +23,69 @@ function formatCurrency(value) {
 }
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const [totalOrder, setTotalOrder] = useState(null);
   const [totalPost, setTotalPost] = useState(null);
-  const [totalScales, setTotalScales] = useState(null);
-  const [totalGarden, setTotalGarden] = useState(null);
+  const [totalInvoice, setTotalInvoice] = useState(null);
   const [totalOrderStatus, setTotalOrderStatus] = useState(null);
-  // const dataPost = useSelector((state) => state?.getUser?.getTopPost);
-  // console.log("data1: ", dataPost);
+  const [totalOrder, setTotalOrder] = useState(null);
+  useEffect(() => {
+    const fetchSequentially = async () => {
+      try {
+        const userResult = await dispatch(getAllTotalUser());
+        setTotalOrder(userResult?.payload?.totalUsers);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const postResult = await dispatch(getAllTotalPost());
+        setTotalPost(postResult?.payload?.totalPost);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const invoiceResult = await dispatch(getAllTotalInvoice());
+        setTotalInvoice(invoiceResult?.payload?.total);
+      } catch (error) {
+        console.error("Error fetching data sequentially:", error);
+      }
+    };
+    fetchSequentially();
+  }, [dispatch]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const chartRef = useRef(null);
-  const translateStatus = (status) => {
-    switch (status) {
-      case "Accepted":
-        return "Đã chấp nhận";
-      case "Rejected":
-        return "Đã từ chối";
-      case "Pending":
-        return "Đang chờ xử lý";
-      case "UserRefused":
-        return "Từ chối nhận hàng";
-      case "Shipping":
-        return "Đang vận chuyển";
-      default:
-        return status;
-    }
-  };
   useEffect(() => {
-    if (totalOrderStatus && chartRef.current) {
-      const labels = ["Đã chấp nhận", "Đã từ chối", "Đang chờ xử lý", "Từ chối nhận hàng", "Đang vận chuyển"];
-      const series = [25, 15, 10, 20, 30];
-      
-      const options = {
-        series: series,
-        chart: {
-          width: 400,
-          type: "pie",
-        },
-        labels: labels,
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: "bottom",
-              },
+    // if (totalOrderStatus && chartRef.current) {
+    const labels = ["Đã mua", "Đã từ chối", "Đang chờ xử lý", "Từ chối duyệt"];
+    const series = [25, 15, 10, 20];
+
+    const options = {
+      series: series,
+      chart: {
+        width: 500,
+        type: "pie",
+      },
+      labels: labels,
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: "bottom",
             },
           },
-        ],
-      };
-  
-      const chart = new ApexCharts(chartRef.current, options);
-  
-      // Render the chart
-      chart.render();
-  
-      // Destroy the chart when the component is unmounted
-      return () => {
-        chart.destroy();
-      };
-    }
+        },
+      ],
+    };
+
+    const chart = new ApexCharts(chartRef.current, options);
+
+    // Render the chart
+    chart.render();
+
+    // Destroy the chart when the component is unmounted
+    return () => {
+      chart.destroy();
+    };
+    // }
   }, [totalOrderStatus, chartRef]);
-  
+
   return (
     <Box m="20px" sx={{ height: "95vh" }}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -104,13 +108,11 @@ const Dashboard = () => {
         >
           <StatBox
             title={totalOrder}
-            subtitle="Đơn đặt hàng trong 7 ngày qua"
+            subtitle="Tổng người dùng hệ thống"
             progress="0.3"
             increase="+25%"
             icon={
-              <ShoppingCartOutlinedIcon
-                sx={{ color: "#339900", fontSize: "26px" }}
-              />
+              <PermIdentityIcon sx={{ color: "#3366CC", fontSize: "32px" }} />
             }
           />
         </Box>
@@ -141,13 +143,11 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title={totalScales}
-            subtitle="Tổng số lượt thích"
+            title={totalInvoice}
+            subtitle="Tổng số đơn hàng"
             progress="0.30"
             increase="+5%"
-            icon={
-              <ForestOutlinedIcon sx={{ color: "#009900", fontSize: "26px" }} />
-            }
+            icon={<PaidOutlinedIcon sx={{ color: "red", fontSize: "32px" }} />}
           />
         </Box>
         <Box
@@ -158,12 +158,12 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title={totalGarden}
+            title={12}
             subtitle="Tổng số bình luận"
             progress="0.80"
             increase="+43%"
             icon={
-              <YardOutlinedIcon sx={{ color: "#009900", fontSize: "26px" }} />
+              <SmsOutlinedIcon sx={{ color: "#009900", fontSize: "26px" }} />
             }
           />
         </Box>
@@ -233,7 +233,7 @@ const Dashboard = () => {
             color="red"
             sx={{ marginBottom: "10px", fontWeight: "bold" }}
           >
-            {totalOrder} đã mua vip trong 7 ngày vừa qua
+            đã mua vip trong 7 ngày vừa qua
           </Typography>
         </Box>
         <Box

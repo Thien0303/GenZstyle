@@ -32,7 +32,7 @@ const Report = () => {
     setIsMenuOpen(false);
   };
   const handleUpdateOrder = (action) => {
-    if (selectedOrderId && (action === "active" || action === "reject")) {
+    if (selectedOrderId && (action === "inactive" || action === "reject")) {
       dispatch(updateAllReport({ id: selectedOrderId, status: action }))
         .then(() => {
           dispatch(getAllPostAdmin());
@@ -52,7 +52,7 @@ const Report = () => {
   }, [dispatch]);
   const getStatusText = (status) => {
     switch (status) {
-      case "Active":
+      case "InActive":
         return "Bài viết đã được gỡ";
       case "Watting":
         return "Đang chờ xử lý";
@@ -63,12 +63,6 @@ const Report = () => {
     }
   };
   const columns = [
-    { field: "username", headerName: "Tên đăng nhập", flex: 1 },
-    {
-      field: `email`,
-      headerName: "Email",
-      flex: 1,
-    },
     {
       field: `reportName`,
       headerName: "Tên bài Report",
@@ -129,7 +123,7 @@ const Report = () => {
                   horizontal: "right",
                 }}
               >
-                <MenuItem onClick={() => handleUpdateOrder("active")}>
+                <MenuItem onClick={() => handleUpdateOrder("inactive")}>
                   Đồng ý
                 </MenuItem>
                 <MenuItem onClick={() => handleUpdateOrder("reject")}>

@@ -1,21 +1,16 @@
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
-import CloudOutlinedIcon from "@mui/icons-material/CloudOutlined";
-import DifferenceOutlinedIcon from "@mui/icons-material/DifferenceOutlined";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useState } from "react";
 import { Menu, MenuItem, ProSidebar } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { Link } from "react-router-dom";
 import { tokens } from "../../theme";
-import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
-import LocalAtmOutlinedIcon from "@mui/icons-material/LocalAtmOutlined";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
-import DiscountOutlinedIcon from "@mui/icons-material/DiscountOutlined";
-import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import LockPersonOutlinedIcon from "@mui/icons-material/LockPersonOutlined";
+import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
+import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -41,13 +36,27 @@ const Sidebar = () => {
   const [selected, setSelected] = useState("");
   let isAuthenticated = JSON.parse(localStorage.getItem("user"));
   let renderItem;
-  if (isAuthenticated.role === "Admin") {
+  if (isAuthenticated.role === "ADMIN") {
     renderItem = (
       <>
         <Item
           title="Dashboard"
           to="/dashboard"
           icon={<HomeOutlinedIcon />}
+          selected={selected}
+          setSelected={setSelected}
+        />
+        <Item
+          title="Danh sách gói vip"
+          to="/getPackage"
+          icon={<RequestQuoteOutlinedIcon />}
+          selected={selected}
+          setSelected={setSelected}
+        />
+        <Item
+          title="Tạo gói vip"
+          to="/addPackage"
+          icon={<CreateNewFolderOutlinedIcon />}
           selected={selected}
           setSelected={setSelected}
         />
@@ -61,14 +70,14 @@ const Sidebar = () => {
         <Item
           title="Danh sách ban user"
           to="/getBanUser"
-          icon={<ListAltOutlinedIcon />}
+          icon={<LockPersonOutlinedIcon />}
           selected={selected}
           setSelected={setSelected}
         />
         <Item
           title="Danh sách người dùng"
           to="/getUser"
-          icon={<ListAltOutlinedIcon />}
+          icon={<PeopleAltOutlinedIcon />}
           selected={selected}
           setSelected={setSelected}
         />
@@ -97,8 +106,8 @@ const Sidebar = () => {
         },
       }}
     >
-      <ProSidebar collapsed={isCollapsed}>
-        <Menu iconShape="square">
+      <ProSidebar style={{ height: "100%" }} collapsed={isCollapsed}>
+        <Menu style={{ height: "100vh" }} iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}

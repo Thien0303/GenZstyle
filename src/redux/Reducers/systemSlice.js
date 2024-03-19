@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getAllBanUserAdmin,
+  getAllPackage,
   getAllPostAdmin,
+  getAllTotalPost,
+  getAllTotalUser,
   getAllUser,
 } from "../apiThunk/system";
 const systemSlice = createSlice({
@@ -10,6 +13,9 @@ const systemSlice = createSlice({
     getUser: [],
     getPost: [],
     getBanUser: [],
+    getTotalUser: [],
+    getTotal: [],
+    getPackages: [],
     loading: false,
   },
   extraReducers: {
@@ -49,6 +55,45 @@ const systemSlice = createSlice({
       state.getBanUser = action.payload;
     },
     [getAllBanUserAdmin.rejected]: (state, action) => {
+      state.loading = false;
+      state.loading = "failed";
+    },
+    [getAllPackage.pending]: (state, action) => {
+      state.loading = true;
+      state.loading = "loading";
+    },
+    [getAllPackage.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.loading = "succeeded";
+      state.getPackages = action.payload;
+    },
+    [getAllPackage.rejected]: (state, action) => {
+      state.loading = false;
+      state.loading = "failed";
+    },
+    [getAllTotalUser.pending]: (state, action) => {
+      state.loading = true;
+      state.loading = "loading";
+    },
+    [getAllTotalUser.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.loading = "succeeded";
+      state.getTotalUser = action.payload;
+    },
+    [getAllTotalUser.rejected]: (state, action) => {
+      state.loading = false;
+      state.loading = "failed";
+    },
+    [getAllTotalPost.pending]: (state, action) => {
+      state.loading = true;
+      state.loading = "loading";
+    },
+    [getAllTotalPost.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.loading = "succeeded";
+      state.getTotalUser = action.payload;
+    },
+    [getAllTotalPost.rejected]: (state, action) => {
       state.loading = false;
       state.loading = "failed";
     },

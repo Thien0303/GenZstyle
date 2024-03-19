@@ -10,9 +10,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { toast } from "react-toastify";
 import {
   getAllBanUserAdmin,
-  updateAllReport,
+  updateBanUserRport,
 } from "../../../src/redux/apiThunk/system";
-import { NavLink } from "react-router-dom";
 const BanUser = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -27,13 +26,14 @@ const BanUser = () => {
     setSelectedOrderId(orderId);
     setIsMenuOpen(true);
   };
-  console.log("Id: ", selectedOrderId);
   const handleMenuClose = () => {
     setIsMenuOpen(false);
   };
   const handleUpdateOrder = (action) => {
-    if (selectedOrderId && (action === "active" || action === "reject")) {
-      dispatch(updateAllReport({ id: selectedOrderId, status: action }))
+    if (selectedOrderId && (action === "inactive" || action === "active")) {
+      dispatch(
+        updateBanUserRport({ reportId: selectedOrderId, status: action })
+      )
         .then(() => {
           dispatch(getAllBanUserAdmin());
           handleMenuClose();
@@ -52,12 +52,12 @@ const BanUser = () => {
   }, [dispatch]);
   const getStatusText = (status) => {
     switch (status) {
-      case "Active":
-        return "Bài viết đã được gỡ";
+      case "InActive":
+        return "Report đã được chấp nhận";
       case "Watting":
         return "Đang chờ xử lý";
-      case "Rejected":
-        return "Từ chối";
+      case "Active":
+        return "Chưa có dấu hiệu vi phạm";
       default:
         return status;
     }
@@ -72,6 +72,11 @@ const BanUser = () => {
     {
       field: `reportName`,
       headerName: "Tên bài Report",
+      flex: 1,
+    },
+    {
+      field: `description`,
+      headerName: "Mô tả ",
       flex: 1,
     },
     {
@@ -124,12 +129,12 @@ const BanUser = () => {
                   horizontal: "right",
                 }}
               >
-                {/* <MenuItem onClick={() => handleUpdateOrder("active")}>
+                <MenuItem onClick={() => handleUpdateOrder("inactive")}>
                   Đồng ý
                 </MenuItem>
-                <MenuItem onClick={() => handleUpdateOrder("reject")}>
+                <MenuItem onClick={() => handleUpdateOrder("active")}>
                   Từ chối
-                </MenuItem> */}
+                </MenuItem>
               </Popover>
             </span>
           );
@@ -146,22 +151,10 @@ const BanUser = () => {
   ];
   const rows =
     postData?.map((item) => {
-      const account = item?.account || {};
-      let email = "";
-      let username = "";
-      if (Array.isArray(account) && account.length > 0) {
-        const firstAccount = account[0];
-        email = firstAccount.email || "";
-        username = firstAccount.username || "";
-      } else if (typeof account === "object") {
-        email = account.email || "";
-        username = account.username || "";
-      }
-
       return {
         id: item.id,
-        email: email,
-        username: username,
+        email: item.email,
+        username: item.userName,
         reportName: item.reportName,
         status: item.status,
         date: item.createdAt,
